@@ -1,10 +1,22 @@
-import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  Button,
+} from 'react-native';
 
 const SocialMediaView = ({icon, name}) => {
+  const [showInput, setInputVisibility] = useState(false);
+  const [getText, setText] = useState();
   return (
     <View style={styles.container}>
-      <View style={styles.rowContainer}>
+      <Pressable
+        style={styles.rowContainer}
+        onPress={() => setInputVisibility(!showInput)}>
         <Image
           style={styles.image}
           source={{
@@ -14,7 +26,26 @@ const SocialMediaView = ({icon, name}) => {
         <View style={styles.textContainer}>
           <Text style={styles.text}>{name}</Text>
         </View>
-      </View>
+      </Pressable>
+      {showInput && (
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder={'Enter url'}
+            onChangeText={newText => {
+              setText(newText);
+            }}
+          />
+          <Pressable
+            style={styles.button}
+            title="Save"
+            onPress={() => {
+              console.log('entered text', getText);
+            }}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 };
@@ -39,6 +70,31 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginLeft: 12,
+    marginBottom: 8,
+  },
+  input: {
+    borderRadius: 4,
+    width: 200,
+    borderColor: 'black',
+    paddingHorizontal: 10,
+    borderWidth: 1,
+  },
+  buttonContainer: {
+    marginLeft: 8,
+  },
+  button: {
+    padding: 8,
+    backgroundColor: 'black',
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: 'white',
   },
 });
 
