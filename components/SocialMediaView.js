@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,17 +6,21 @@ import {
   StyleSheet,
   TextInput,
   Pressable,
-  Button,
 } from 'react-native';
+import {AsyncStorageHelper} from '../helpers/AsyncStoragHelper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SocialMediaView = ({icon, name}) => {
   const [showInput, setInputVisibility] = useState(false);
-  const [getText, setText] = useState();
+  const [getText, setText] = useState('');
   return (
     <View style={styles.container}>
       <Pressable
         style={styles.rowContainer}
-        onPress={() => setInputVisibility(!showInput)}>
+        onPress={() => {
+          setInputVisibility(!showInput);
+          AsyncStorageHelper.getItem(name, setText);
+        }}>
         <Image
           style={styles.image}
           source={{
@@ -30,6 +34,7 @@ const SocialMediaView = ({icon, name}) => {
       {showInput && (
         <View style={styles.inputContainer}>
           <TextInput
+            value={getText}
             style={styles.input}
             placeholder={'Enter url'}
             onChangeText={newText => {
@@ -40,7 +45,7 @@ const SocialMediaView = ({icon, name}) => {
             style={styles.button}
             title="Save"
             onPress={() => {
-              console.log('entered text', getText);
+              AsyncStorageHelper.saveItem(name, getText);
             }}>
             <Text style={styles.buttonText}>Save</Text>
           </Pressable>
